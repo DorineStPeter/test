@@ -1,0 +1,8 @@
+#!/bin/sh
+
+FILE=/tmp/test-$$
+
+tzselect > $FILE
+sh $FILE
+rm -f $FILE
+
