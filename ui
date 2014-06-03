@@ -1,65 +1,31 @@
 #user interface
 
-CALC=calc
+TEST=test2
 HOST=localhost
 PORT=1234
 
-FILE1=/tmp/calc1-$$
-FILE2=/tmp/calc2-$$
-ERROR=/tmp/calc-err-$$
+EXPR1=/tmp/test1-$$
+EXPR2=/tmp/test2-$$
+FILE=/tmp/testfile-$$
+ERROR=/tmp/test-err-$$
 
-GETTEXT="gettext -d calc_ui"
-
-if [ -r ~/.calc.conf ]
-then
-. ~/.calc.conf
-elif [ -r /etc/calc.conf ]
-then
-. /etc/calc.conf
-fi
+GETTEXT="gettext -d ui"
 
 which gdialog 2> /dev/null && DIALOG=gdialog || DIALOG=dialog
 
-help () {
-        echo "Usage: $0 [ host [port] | --help ]"
-}
-
 end () {
-rm -f $FILE1 $FILE2 $ERROR
+rm -f $FILE $EXPR1 $EXPR2 $ERROR
 exit
 }
 
-if [ $# -eq 1 ]
-then
-if [ $1 -eq '--help' ]
-        then
-help
-exit -1
-        else
-HOST=$1
-        fi
-elif [ $# -eq 2 ]
-then
-PORT=$2
-fi
-
-if [ $# -ge 1 -o `basename $0` = 'ncalc_ui' ]
-then
-if [ $HOST -a $PORT ]
-then
-CALC="nc $HOST $PORT"
-else
-echo "You must set HOST and PORT"
-exit -2
-fi
-fi
-
 while true
 do
-$DIALOG --inputbox "`$GETTEXT \"Enter expression:\"`" 8 35 2> $FILE1 || end
-if cat $FILE1 | $CALC > $FILE2 2>$ERROR
+$DIALOG --inputbox "`$GETTEXT \"Enter Continent:\"`" 8 35 2> $EXPR1 || end
+$DIALOG --inputbox "`$GETTEXT \"Enter City:\"`" 8 35 2> $EXPR2 || end
+
+if cat $EXPR1 |  cat $EXPR2 |  $TEST > $FILE  2>$ERROR
 then
-MSG="`$GETTEXT \"Result:\"` `cat $FILE2`\\n\\n`$GETTEXT \"Continue?\"`"
+MSG="`$GETTEXT \"date:\"` `cat $FILE`\\n\\n`$GETTEXT \"Continue?\"`"
 $DIALOG --yesno "$MSG" 7 20 || end
 else
 MSG="`$GETTEXT \"Error:\"`\\n\\n`cat $ERROR`\\n\\n`$GETTEXT \"Continue?\"`"
