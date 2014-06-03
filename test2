@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+read EXPR1
+read EXPR2
+export TZ="$EXPR1"/"$EXPR2"
+date
+
